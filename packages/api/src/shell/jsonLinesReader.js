@@ -1,6 +1,7 @@
 const fs = require('fs');
 const stream = require('stream');
 const byline = require('byline');
+const { EJSON } = require('bson');
 
 class ParseStream extends stream.Transform {
   constructor({ limitRows }) {
@@ -10,7 +11,7 @@ class ParseStream extends stream.Transform {
     this.rowsWritten = 0;
   }
   _transform(chunk, encoding, done) {
-    const obj = JSON.parse(chunk);
+    const obj = EJSON.parse(chunk);
     if (!this.wasHeader) {
       if (!obj.__isStreamHeader) {
         this.push({
